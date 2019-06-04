@@ -66,7 +66,8 @@ add_action('init', function( ) {
 				foreach ($item['metadata'] as $metadata) {
 					$metadatas[] = '"' . $metadata["name"] . '":' . \json_encode($metadata["value"]);
 				}
-				$item_jsonld[] = '{"@id":"' . $item['url'] . '",' . \implode(",", $metadatas) . '}';
+				//$item_jsonld[] = '{"@id":"' . $item['url'] . '",' . \implode(",", $metadatas) . '}';
+				$item_jsonld[] = '{' . \implode(",", $metadatas) . '}';
 			}
 			return \implode(",", $item_jsonld);
 		}
