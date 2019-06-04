@@ -53,12 +53,12 @@ add_action('init', function( ) {
 			$this->contexts['@language'] = $this->get_locale($response->get_data()['items']);
 
 			$contexts =  '"@context":' . \json_encode($this->contexts);
-			$jsonld = $this->array_to_jsonld($contexts, $response->get_data()['items']);
-			$response->set_data("[" . $jsonld . "]");
+			$jsonld = $this->array_to_jsonld($response->get_data()['items']);
+			$response->set_data('{ ' . $contexts . ', "items":' . '[' . $jsonld . ']}');
 			return $response;
 		}
 
-		protected function array_to_jsonld( $contexts, $data) {
+		protected function array_to_jsonld( $data) {
 			$jsonld = '';
 			$item_jsonld = [];
 			foreach ($data as $item) {
@@ -66,7 +66,7 @@ add_action('init', function( ) {
 				foreach ($item['metadata'] as $metadata) {
 					$metadatas[] = '"' . $metadata["name"] . '":' . \json_encode($metadata["value"]);
 				}
-				$item_jsonld[] = '{' . $contexts . ',' . \implode(",", $metadatas) . '}';
+				$item_jsonld[] = '{"@id":"' . $item['url'] . '",' . \implode(",", $metadatas) . '}';
 			}
 			return \implode(",", $item_jsonld);
 		}
